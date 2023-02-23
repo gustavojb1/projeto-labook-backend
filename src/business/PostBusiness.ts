@@ -2,6 +2,8 @@ import { PostDatabase } from "../database/PostDatabase";
 import { UserDatabase } from "../database/UserDatabase";
 import {
   CreatePostInputDTO,
+  DeletePostInputDTO,
+  EditPostDTO,
   GetPostInputDTO,
   GetPostOutputDTO,
   PostDTO,
@@ -20,7 +22,9 @@ export class PostBusiness {
     private postDTO: PostDTO
   ) {}
 
-  public getPosts = async (input: GetPostInputDTO): Promise<GetPostOutputDTO[]> => {
+  public getPosts = async (
+    input: GetPostInputDTO
+  ): Promise<GetPostOutputDTO[]> => {
     const { token } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -61,16 +65,6 @@ export class PostBusiness {
   public createPost = async (input: CreatePostInputDTO): Promise<void> => {
     const { content, token } = input;
 
-    if (typeof content !== "string") {
-      // throw new BadRequestError("'name' deve ser string")
-      throw new Error("'content' deve ser string");
-    }
-
-    if (typeof token !== "string") {
-      // throw new BadRequestError("'email' deve ser string")
-      throw new Error("'token' deve ser string");
-    }
-
     const payload = this.tokenManager.getPayload(token);
 
     if (payload === null) {
@@ -98,4 +92,68 @@ export class PostBusiness {
     const newPostDB = newPost.toDBModel();
     await this.postDatabase.createPost(newPostDB);
   };
+
+  public updatePost = async (input: EditPostDTO): Promise<void> => {
+    const { id, content, token } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (payload === null) {
+      throw new Error("token inválido");
+    }
+
+    const postDB = await this.postDatabase.findPostById(id);
+
+    if (!postDB){
+      throw new Error("Não foi encontrado um post com esse id");
+    }
+
+    if (payload.id !== postDB.creator_id){
+      throw new Error("Somente quem criou o post pode editá-lo");
+    }
+
+    const updatedAt = (new Date()).toISOString();
+
+
+    const editedPost = new Post(
+       id,
+       content,
+       postDB.likes,
+       postDB.dislikes,
+       postDB.created_at,
+       updatedAt,
+       {
+         id: payload.id,
+         name: payload.name,
+       })
+
+      const editedPostDB = editedPost.toDBModel();
+      await this.postDatabase.updatePostById(editedPostDB, id);
+      
+      }
+
+      public deletePost = async (input: DeletePostInputDTO): Promise<void> => {
+        const { id, token } = input;
+    
+        const payload = this.tokenManager.getPayload(token);
+    
+        if (payload === null) {
+          throw new Error("token inválido");
+        }
+    
+        const postDB = await this.postDatabase.findPostById(id);
+    
+        if (!postDB){
+          throw new Error("Não foi encontrado um post com esse id");
+        }
+    
+        if (payload.id !== postDB.creator_id){
+          throw new Error("Somente quem criou o post pode deleta-lo");
+        }    
+       
+      
+          await this.postDatabase.deletePostById(postDB.id);
+          
+          }
+      
 }
