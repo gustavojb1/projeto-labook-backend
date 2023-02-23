@@ -15,4 +15,25 @@ export class PostDatabase extends BaseDatabase {
   public async createPost(newPostDB: PostDB) {
     await BaseDatabase.connection(PostDatabase.TABLE_POST).insert(newPostDB);
   }
+
+  public async findPostById(id : string){
+    const [ result ] : PostDB[] | undefined[] = await BaseDatabase
+        .connection(PostDatabase.TABLE_POST)
+        .where({ id });
+    return result;
+}
+
+  public async updatePostById(updatedPostDB : PostDB, id : string){
+    await BaseDatabase
+        .connection(PostDatabase.TABLE_POST)
+        .update(updatedPostDB)
+        .where({ id })
+  }
+
+  public async deletePostById(id : string){
+    await BaseDatabase
+        .connection(PostDatabase.TABLE_POST)
+        .del()
+        .where({ id });
+}
 }

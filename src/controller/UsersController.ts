@@ -1,23 +1,24 @@
 import { Request, Response } from "express";
 import { UsersBusiness } from "../business/UsersBusiness";
-import { LoginInput, SignupInput } from "../dtos/usersDTO";
+import { LoginInput, SignupInput, UsersDTO } from "../dtos/usersDTO";
 
 export class UsersController {
-  constructor(private userBusiness: UsersBusiness) {}
+  constructor(
+    private userBusiness: UsersBusiness,
+    private usersDTO: UsersDTO
+  ) {}
 
   public getUsers = () => {};
 
   public login = async (req: Request, res: Response) => {
     try {
-        const input: LoginInput = {
-            email: req.body.email,
-            password: req.body.password
-        }
+      const email = req.body.email;
+      const password = req.body.password;
 
-        const output = await this.userBusiness.login(input)
+      const input = this.usersDTO.loginPostInput(email, password);
+      const output = await this.userBusiness.login(input);
 
-        res.status(200).send(output)
-
+      res.status(200).send(output);
     } catch (error) {
       console.log(error);
 
@@ -35,11 +36,12 @@ export class UsersController {
 
   public signup = async (req: Request, res: Response) => {
     try {
-      const input: SignupInput = {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-      };
+      const name = req.body.name;
+      const email = req.body.email;
+      const password = req.body.password;
+
+
+      const input = this.usersDTO.signupInput(name, email, password);
 
       const output = await this.userBusiness.signup(input);
 

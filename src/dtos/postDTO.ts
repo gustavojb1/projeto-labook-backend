@@ -23,6 +23,17 @@ export interface GetPostOutputDTO {
     }
 }
 
+export interface EditPostDTO {
+    id : string
+    content : string
+    token: string
+}
+
+export interface DeletePostInputDTO {
+    id : string
+    token: string
+}
+
 export type GetPostsOutput = PostModel[]
 
 export class PostDTO {
@@ -52,4 +63,56 @@ export class PostDTO {
         
         return result;
     }
+
+    createPostInput = (content: unknown, token: unknown ): CreatePostInputDTO =>{
+        if (typeof content !== "string"){
+            throw new Error("'content' deve ser uma string");
+        }
+
+        if (typeof token !== "string"){
+            throw new Error("Token inválido");
+        }
+
+        const result : CreatePostInputDTO = {
+            content,
+            token
+        }
+
+        return result;
+    }
+
+    editPostInput = (id: string, content: unknown, token: unknown ): EditPostDTO =>{
+
+        if (typeof content !== "string"){
+            throw new Error("'content' deve ser uma string");
+        }
+
+        if (typeof token !== "string"){
+            throw new Error("Token inválido");
+        }
+
+        const result : EditPostDTO = {
+            id,
+            content,
+            token
+        }
+
+        return result;
+    }
+
+    deletePostInput = (id: string, token: unknown ): DeletePostInputDTO =>{
+
+        if (typeof token !== "string"){
+            throw new Error("Token inválido");
+        }
+
+        const result : DeletePostInputDTO = {
+            id,
+            token
+        }
+
+        return result;
+    } 
+
+
 }

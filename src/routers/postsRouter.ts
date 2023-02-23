@@ -24,3 +24,7 @@ postRouter.get('/', postController.getPost)
 
 postRouter.post('/', postController.createPost)
 
+postRouter.put('/:id', postController.updatePost);
+
+postRouter.delete('/:id', postController.deletePost);
+
