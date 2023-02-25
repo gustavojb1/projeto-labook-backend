@@ -1,3 +1,5 @@
+import { User } from "../models/User"
+import { USER_ROLES } from "../types"
 
 
 export interface SignupInput {
@@ -21,7 +23,42 @@ export interface LoginOutput {
     token: string
 }
 
+export interface GetUsersInput {
+    token: string
+}
+export interface GetUsersOutputDTO {
+    id : string
+    name : string
+    email: string
+    role : USER_ROLES
+}
+
 export class UsersDTO {
+    getUsers = (token: unknown):GetUsersInput=>{
+        if (typeof token !== "string"){
+            throw new Error ("Token inválido");
+        }
+
+        const result : GetUsersInput = {
+            token
+        }
+
+        return result;
+    }
+
+    getUsersOutput = (user: User ):GetUsersOutputDTO=>{
+
+
+        const result : GetUsersOutputDTO = {
+            id: user.getId(),
+            name: user.getName(),
+            email: user.getEmail(),
+            role: user.getRole(),
+        }
+        
+        return result;
+    }
+
     loginPostInput = (email: unknown, password:unknown):LoginInput=>{
         if (typeof email !== "string"){
             throw new Error("'email' deve ser uma string");

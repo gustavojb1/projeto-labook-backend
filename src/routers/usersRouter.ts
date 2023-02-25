@@ -14,7 +14,8 @@ const usersController = new UsersController(
     new UserDatabase(),
     new TokenManager(),
     new HashManager(),
-    new IdGenerator()
+    new IdGenerator(),
+    new UsersDTO()
   ),
   new UsersDTO()
 );

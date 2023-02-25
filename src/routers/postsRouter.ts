@@ -1,4 +1,5 @@
 import express from 'express'
+import { LikesDislikesDatabase } from '../business/LikesDislikesDatabase'
 import { PostBusiness } from '../business/PostBusiness'
 import { PostController } from '../controller/PostController'
 import { PostDatabase } from '../database/PostDatabase'
@@ -16,7 +17,8 @@ const postController = new PostController(
         new UserDatabase(),
         new TokenManager(),
         new IdGenerator(),
-        new PostDTO()
+        new PostDTO(),
+        new LikesDislikesDatabase()
     ), new PostDTO()
 )
 
@@ -27,4 +29,6 @@ postRouter.post('/', postController.createPost)
 postRouter.put('/:id', postController.updatePost);
 
 postRouter.delete('/:id', postController.deletePost);
+
+postRouter.put("/:id/like", postController.updatePostLikes);
 

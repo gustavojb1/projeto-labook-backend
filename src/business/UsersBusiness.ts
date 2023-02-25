@@ -1,5 +1,5 @@
 import { UserDatabase } from "../database/UserDatabase";
-import { LoginInput, LoginOutput, SignupInput, SignupOutput } from "../dtos/usersDTO";
+import { GetUsersInput, GetUsersOutputDTO, LoginInput, LoginOutput, SignupInput, SignupOutput, UsersDTO } from "../dtos/usersDTO";
 import { User } from "../models/User";
 import { HashManager } from "../services/HashManager";
 import { IdGenerator } from "../services/IdGenerator";
@@ -11,9 +11,41 @@ export class UsersBusiness {
     private userDatabase: UserDatabase,
     private tokenManager: TokenManager,
     private hashManager: HashManager,
-    private idGenerator: IdGenerator
+    private idGenerator: IdGenerator,
+    private usersDTO: UsersDTO
   ) {}
 
+    public getUsers = async (input: GetUsersInput): Promise<GetUsersOutputDTO[]> =>{
+      const { token } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (payload === null) {
+      throw new Error("token inválido");
+    }
+
+    if(payload.role!=='ADMIN'){
+      throw new Error("Apenas ADMINISTRADORES podem realizar esta ação");
+    }
+
+    const usersDB = await this.userDatabase.findUsers()
+
+    const output = usersDB.map((userDB) => {
+      const user = new User(
+        userDB.id,
+        userDB.name,
+        userDB.email,
+        userDB.password,
+        userDB.role,
+        userDB.created_at,
+      );
+
+    return this.usersDTO.getUsersOutput(user)
+
+    })
+
+    return output
+  }
 
   public login = async (input: LoginInput): Promise<LoginOutput> => {
     const { email, password } = input

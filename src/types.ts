@@ -37,3 +37,9 @@ export interface PostModel {
   created_at: string
   updated_at: string
 }
+
+export interface LikesDislikesDB {
+  user_id: string
+  post_id: string
+  like: number
+}

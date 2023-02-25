@@ -36,6 +36,12 @@ export interface DeletePostInputDTO {
 
 export type GetPostsOutput = PostModel[]
 
+export interface EditPostLikesInputDTO {
+    id : string
+    like : boolean
+    token: string
+}
+
 export class PostDTO {
     getPostInput = (token: unknown) : GetPostInputDTO => {
         if (typeof token !== "string"){
@@ -57,7 +63,7 @@ export class PostDTO {
             likes: post.getLikes(),
             dislikes: post.getDislikes(),
             createdAt: post.getCreatedAt(),
-            updatedAt: post.getCreatedAt(),
+            updatedAt: post.getUpdatedAt(),
             creator: post.getCreator()
         }
         
@@ -113,6 +119,25 @@ export class PostDTO {
 
         return result;
     } 
+
+    
+    editPostLikesInput = (id : string, like : unknown, token: unknown) : EditPostLikesInputDTO => {
+        
+        if (typeof like !== "boolean"){
+            throw new Error("'like' deve ser um boolean");
+        }
+        if (typeof token !== "string"){
+            throw new Error("Token inválido");
+        }
+
+        const result : EditPostLikesInputDTO = {
+            id,
+            like,
+            token
+        }
+
+        return result;
+    }
 
 
 }
