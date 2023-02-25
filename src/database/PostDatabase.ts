@@ -26,8 +26,8 @@ export class PostDatabase extends BaseDatabase {
   public async updatePostById(updatedPostDB : PostDB, id : string){
     await BaseDatabase
         .connection(PostDatabase.TABLE_POST)
-        .update(updatedPostDB)
         .where({ id })
+        .update(updatedPostDB)
   }
 
   public async deletePostById(id : string){
