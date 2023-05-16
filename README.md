@@ -1,7 +1,6 @@
 # Projeto Labook
 O Labook é uma rede social com o objetivo de promover a conexão e interação entre pessoas. Quem se cadastrar no aplicativo poderá criar e curtir publicações.
 
-Agora que temos as bases de criação de APIs e banco de dados, o próximo nível é a implementação de segurança e códigos mais escaláveis. Veremos durante o prazo de entrega desse projeto inúmeros conceitos e formas de desenvolvimento seguindo padrões de design e arquitetura, e seu desafio será unir as funcionalidades com as boas práticas de código.
 
 # Conteúdos abordados
 - NodeJS
@@ -22,25 +21,6 @@ Agora que temos as bases de criação de APIs e banco de dados, o próximo níve
 
 https://dbdiagram.io/d/63d16443296d97641d7c1ae1
 
-# Lista de requisitos
-- Endpoints
-    - [ ]  signup
-    - [ ]  login
-    - [ ]  get posts
-    - [ ]  create post
-    - [ ]  edit post
-    - [ ]  delete post
-    - [ ]  like / dislike post
-
-- Autenticação e autorização
-    - [ ]  identificação UUID
-    - [ ]  senhas hasheadas com Bcrypt
-    - [ ]  tokens JWT
- 
- - Código
-    - [ ]  POO
-    - [ ]  Arquitetura em camadas
-    - [ ]  Roteadores no Express
 
 # Exemplos de requisição
 
@@ -190,14 +170,3 @@ Caso dê um dislike em um post que tenha dado like, o dislike sobrescreve o like
 // status 200 OK
 ```
 
-### Para entender a tabela likes_dislikes
-- no SQLite, lógicas booleanas devem ser controladas via 0 e 1 (INTEGER)
-- quando like valer 1 na tabela é porque a pessoa deu like no post
-    - na requisição like é true
-    
-- quando like valor 0 na tabela é porque a pessoa deu dislike no post
-    - na requisição like é false
-    
-- caso não exista um registro na tabela de relação, é porque a pessoa não deu like nem dislike
-- caso dê like em um post que já tenha dado like, o like é removido (deleta o item da tabela)
-- caso dê dislike em um post que já tenha dado dislike, o dislike é removido (deleta o item da tabela)
